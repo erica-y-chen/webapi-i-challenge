@@ -25,6 +25,7 @@ db
     });
 });
 
+
 //add new user 
 server.post('/users', (req,res) => {
     //axios.post(url,data)=> data shows up as body on the server
@@ -46,6 +47,23 @@ server.post('/users', (req,res) => {
 //         res.status(201).json(user)
 //     })
 
+
+
+server.get('/users/:id', (req, res) => {
+    const userId= req.params.id
+
+    db
+        .findById(userId)
+        .then(user => {
+        res.status(200).json(user);
+        })
+        .catch(err => {
+        // handle error
+        res.json({ error: err, message: 'user does not exist' });
+        });
+    });
+
+    
 //delete users 
 
 server.delete('/users/:id', (req, res) => {
@@ -54,7 +72,7 @@ server.delete('/users/:id', (req, res) => {
         res.status(204).end(); //sends back response to the client saying successful
     }) .catch(err => {
         //handle error
-        res.status(500).json({error: err, message: 'error deleting the user'});
+        res.status(404).json({error: err, message: 'message: "The user with the specified ID does not exist'});
     });
 });
 
