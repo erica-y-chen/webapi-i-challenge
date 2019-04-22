@@ -47,7 +47,18 @@ server.post('/users', (req,res) => {
 //         res.status(201).json(user)
 //     })
 
-
+server.put('/users/:id', (req, res) => {
+    const userId= req.params.id
+    const userInformation = req.body;
+    
+    db.update(userId, userInformation)
+    .then(count => {
+        res.status(200).json(count);
+    }).catch(err => {
+        //handle error
+        res.json({ error: err, message: 'cannot update user' });
+    });
+});
 
 server.get('/users/:id', (req, res) => {
     const userId= req.params.id
