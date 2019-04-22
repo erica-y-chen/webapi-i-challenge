@@ -21,7 +21,7 @@ db
     })
     .catch(err => {
     // handle error
-    res.json({ error: err, message: 'Something broke' });
+    res.json({ error: err, message: 'The users information could not be retrieved.' });
     });
 });
 
@@ -29,7 +29,18 @@ db
 //add new user 
 server.post('/users', (req,res) => {
     //axios.post(url,data)=> data shows up as body on the server
-    const userInformation = req.body;
+    for(let key of Object.keys(req.body)) {
+        if(!['name', 'bio'].includes(key)) {
+            return res.status(400).json({
+                message: "Please provide name and bio for the user."
+            })
+        }
+    }
+
+    const userInformation = {
+        name: req.body.name,
+        bio: req.body.bio,
+    }
     console.log('request body: ', userInformation)
 
     db.insert(userInformation)
@@ -70,7 +81,7 @@ server.get('/users/:id', (req, res) => {
         })
         .catch(err => {
         // handle error
-        res.json({ error: err, message: 'user does not exist' });
+        res.json({ error: err, message: 'he user with the specified ID does not exist.' });
         });
     });
 
