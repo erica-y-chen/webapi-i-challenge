@@ -29,19 +29,16 @@ db
 //add new user 
 server.post('/users', (req,res) => {
     //axios.post(url,data)=> data shows up as body on the server
-    for(let key of Object.keys(req.body)) {
-        if(!['name', 'bio'].includes(key)) {
-            return res.status(400).json({
-                message: "Please provide name and bio for the user."
-            })
-        }
-    }
 
     const userInformation = {
         name: req.body.name,
         bio: req.body.bio,
     }
     console.log('request body: ', userInformation)
+
+    if (!userInformation.name || !userInformation.bio) {
+        return res.status(400).json( {errorMessage: 'Please provide name and bio for the user.'})
+    } // Checks whether empty string or null/undefined
 
     db.insert(userInformation)
     .then(user => {
